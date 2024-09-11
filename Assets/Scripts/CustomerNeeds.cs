@@ -38,6 +38,7 @@ public class CustomerNeeds : MonoBehaviour
             {
                 Debug.Log("Customer at " + transform.position + " was angered >:(");
                 GameManager.Game.customerAngered(happinessLoss);
+                need = "";
                 StartCoroutine(DetermineNeed());
             }
         }
