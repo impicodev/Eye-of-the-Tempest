@@ -38,7 +38,7 @@ public class CustomerNeeds : MonoBehaviour
             {
                 Debug.Log("Customer at " + transform.position + " was angered >:(");
                 GameManager.Game.customerAngered(happinessLoss);
-                need = "";
+                BecomeSatisfied();
                 StartCoroutine(DetermineNeed());
             }
         }
@@ -76,7 +76,7 @@ public class CustomerNeeds : MonoBehaviour
     public void BecomeSatisfied(){
         needBar.transform.localScale = new Vector3(1f, 0.05f, 0);
         needBubble.SetActive(false);
-
+        need = "";
         StartCoroutine(DetermineNeed());
     }
 
