@@ -216,9 +216,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   need: 
+  happinessLoss: 10
   needDelay: 10
   angerThreshold: 30
-  angry: 0
   needBubble: {fileID: 4265288563881098214}
   parentCar: {fileID: 0}
   needIcon: {fileID: 6177356237792230390}
@@ -226,6 +226,8 @@ MonoBehaviour:
   needSprites:
   - {fileID: -2413806693520163455, guid: 4adeaf2d2b1c7417e89f026626d8264f, type: 3}
   - {fileID: 3625043607559282579, guid: 045b15ec09bba42448d89db77fa6f20a, type: 3}
+  indicatorPrefab: {fileID: 4128659121990465070, guid: 0c54f8c6a5db18445abd00a33e1d877a, type: 3}
+  sprite: {fileID: 1719589249226602731}
 --- !u!61 &41637330715593582
 BoxCollider2D:
   m_ObjectHideFlags: 0

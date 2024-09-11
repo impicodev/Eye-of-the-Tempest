@@ -16,7 +16,6 @@ public class PlayerController : MonoBehaviour
     public GameObject target;
     public GameObject holder;
     public TMP_Text prompt;
-    public List<Sprite> itemSprites;
 
     Rigidbody2D rb;
     BoxCollider2D collider;
@@ -35,7 +34,7 @@ public class PlayerController : MonoBehaviour
         Vector3 vel = rb.velocity;
         vel.x = horizontal * speed;
 
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow))
             spacePressed = Time.time;
 
         if (Time.time - spacePressed <= jumpBuffer) {
@@ -129,18 +128,7 @@ public class PlayerController : MonoBehaviour
         target = null;
         readyToTake = false;
         holder.SetActive(true);
-        SpriteRenderer sr = holder.GetComponent<SpriteRenderer>();
-        switch(heldItem){
-            case("Water"):
-                sr.sprite = itemSprites[0];
-                break;
-            case("Food"):
-                sr.sprite = itemSprites[1];
-                break;
-            case("Coal"):
-                sr.sprite = itemSprites[2];
-                break;
-        }
+        holder.GetComponent<SpriteRenderer>().sprite = GameManager.Game.getSprite(heldItem);
     }
 
     public void DropItem(){

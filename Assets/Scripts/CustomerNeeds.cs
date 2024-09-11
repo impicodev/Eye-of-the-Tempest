@@ -7,16 +7,17 @@ public class CustomerNeeds : MonoBehaviour
 {
     public string need = ""; //usually an empty string; either "Food" or "Water" otherwise
     public float happinessLoss = 10; //happiness lost after timer ends (max happiness = 100)
-    public int needDelay; //cooldown between requests default=10s
-    public float angerThreshold; //amount of time before the customer gets angry default=30s
+    public float minInactive = 6, maxInactive = 15;//inactive for random amount of time in this range
+    public float angerThreshold; //amount of time before the customer gets angry default=30
 
     public GameObject needBubble;
     public GameObject parentCar;
     public SpriteRenderer needIcon;
     public GameObject needBar;
-    public List<Sprite> needSprites;
-    public GameObject leftIndicatorPrefab, rightIndicatorPrefab;
+    public GameObject indicatorPrefab;
+    public SpriteRenderer sprite;
 
+    private GameObject indicator;
     private float timer;
 
     // Start is called before the first frame update
@@ -42,6 +43,30 @@ public class CustomerNeeds : MonoBehaviour
                 StartCoroutine(DetermineNeed());
             }
         }
+
+        if (sprite.isVisible)
+        {
+            if (indicator != null)
+                Destroy(indicator);
+        }
+        else if (need != "")
+        {
+            if (indicator == null)
+            {
+                bool isLeft = transform.position.x < Camera.main.transform.position.x;
+                indicator = Instantiate(indicatorPrefab, isLeft ? GameManager.Game.leftContainer : GameManager.Game.rightContainer);
+                indicator.transform.localScale = new Vector3(isLeft ? 1 : -1, 1, 1);
+                indicator.transform.GetChild(0).GetComponent<Image>().sprite = GameManager.Game.getSprite(need);
+            }
+            else
+            {
+                float distance = Vector2.Distance(transform.position, GameManager.Game.player.transform.position);
+                float scale = Mathf.Max(0.4f, 1 - (distance - 13) / 50);
+                indicator.GetComponent<RectTransform>().sizeDelta = Vector2.one * 140 * scale;
+                indicator.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = Vector2.one * 80 * scale;
+                indicator.GetComponent<Image>().color = needBubble.GetComponent<SpriteRenderer>().color = new Color(1, 1 - timer / angerThreshold, 1 - timer / angerThreshold);
+            }
+        }
     }
 
     public string GetNeed(){
@@ -51,7 +76,7 @@ public class CustomerNeeds : MonoBehaviour
     //Ok. Every x seconds there is a possibility that the customer will want something.
     //Possibly this can later be updated to create more variation by creating a range around needDelay.
     IEnumerator DetermineNeed(){
-        yield return new WaitForSeconds(needDelay);
+        yield return new WaitForSeconds(Random.Range(minInactive, maxInactive));
         //Roll 0-5; 0=water, 1=food
         int randomRoll = Random.Range(0, 5);
         switch(randomRoll){
@@ -59,13 +84,13 @@ public class CustomerNeeds : MonoBehaviour
                 need = "Water";
                 timer = 0;
                 needBubble.SetActive(true);
-                needIcon.sprite = needSprites[0];
+                needIcon.sprite = GameManager.Game.getSprite(need);
                 break;
             case(1):
                 need = "Food";
                 timer = 0;
                 needBubble.SetActive(true);
-                needIcon.sprite = needSprites[1];
+                needIcon.sprite = GameManager.Game.getSprite(need);
                 break;
             default:
                 StartCoroutine(DetermineNeed());

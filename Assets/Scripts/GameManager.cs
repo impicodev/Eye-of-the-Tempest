@@ -8,6 +8,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Game;
     public Slider happinessBar;
+    public List<Sprite> itemSprites;
+    public Transform leftContainer, rightContainer;
+    public PlayerController player;
 
     private float happiness = 100;
 
@@ -32,5 +35,19 @@ public class GameManager : MonoBehaviour
     private void gameOver()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public Sprite getSprite(string item)
+    {
+        switch (item)
+        {
+            case ("Water"):
+                return itemSprites[0];
+            case ("Food"):
+                return itemSprites[1];
+            case ("Coal"):
+                return itemSprites[2];
+        }
+        return null;
     }
 }
