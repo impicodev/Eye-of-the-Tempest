@@ -6,15 +6,18 @@ using UnityEngine.UI;
 public class CustomerNeeds : MonoBehaviour
 {
     public string need = ""; //usually an empty string; either "Food" or "Water" otherwise
+    public float happinessLoss = 10; //happiness lost after timer ends (max happiness = 100)
     public int needDelay; //cooldown between requests default=10s
     public float angerThreshold; //amount of time before the customer gets angry default=30s
-    public bool angry; //whether the customer is adding to the current anger bar or not
 
     public GameObject needBubble;
     public GameObject parentCar;
     public SpriteRenderer needIcon;
     public GameObject needBar;
     public List<Sprite> needSprites;
+    public GameObject leftIndicatorPrefab, rightIndicatorPrefab;
+
+    private float timer;
 
     // Start is called before the first frame update
     void Start()
@@ -25,9 +28,19 @@ public class CustomerNeeds : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
+        if (need != "")
+        {
+            timer += Time.deltaTime;
+            needBar.transform.localScale = new Vector3(1 - timer / angerThreshold, needBar.transform.localScale.y, 1);
+            if (timer >= angerThreshold)
+            {
+                Debug.Log("Customer at " + transform.position + " was angered >:(");
+                GameManager.Game.customerAngered(happinessLoss);
+                StartCoroutine(DetermineNeed());
+            }
+        }
     }
 
     public string GetNeed(){
@@ -43,15 +56,15 @@ public class CustomerNeeds : MonoBehaviour
         switch(randomRoll){
             case(0):
                 need = "Water";
+                timer = 0;
                 needBubble.SetActive(true);
                 needIcon.sprite = needSprites[0];
-                StartCoroutine(LosePatience());
                 break;
             case(1):
                 need = "Food";
+                timer = 0;
                 needBubble.SetActive(true);
                 needIcon.sprite = needSprites[1];
-                StartCoroutine(LosePatience());
                 break;
             default:
                 StartCoroutine(DetermineNeed());
@@ -59,25 +72,15 @@ public class CustomerNeeds : MonoBehaviour
         }
     }
 
-    IEnumerator LosePatience(){
-        for(int i=0; i<angerThreshold; i++){
-            yield return new WaitForSeconds(1);
-            needBar.transform.localScale -= new Vector3(1/angerThreshold, 0, 0);
-        }
-        angry = true;
-    }
-
     public void BecomeSatisfied(){
-        angry = false;
         needBar.transform.localScale = new Vector3(1f, 0.05f, 0);
         needBubble.SetActive(false);
 
-        StopCoroutine(LosePatience());
         StartCoroutine(DetermineNeed());
     }
 
     private void OnTriggerEnter2D(Collider2D other){
-        print("Trigger entered");
+        //print("Trigger entered");
         //The only thing that should be colliding is the player, but let's have a check anyways.
         if (other.gameObject.tag == "Player"){
             PlayerController pc = other.gameObject.GetComponent<PlayerController>();
@@ -88,7 +91,7 @@ public class CustomerNeeds : MonoBehaviour
     }
 
     private void OnTriggerExit2D(Collider2D other){
-        print("Trigger exited");
+        //print("Trigger exited");
         if (other.gameObject.tag == "Player"){
             PlayerController pc = other.gameObject.GetComponent<PlayerController>();
             if(pc.GetReadyToGive()){

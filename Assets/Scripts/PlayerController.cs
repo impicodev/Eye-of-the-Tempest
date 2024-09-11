@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
             Vector2 pos = rb.position;
             pos.y = collider.bounds.min.y - 0.05f;
             RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.down);
-            if (hit.collider != null && pos.y - hit.point.y < 0.05f)
+            if (hit.collider != null && !hit.collider.isTrigger && pos.y - hit.point.y < 0.05f)
             {
                 spacePressed = -100;
                 vel.y = jumpStrength;

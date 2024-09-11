@@ -28,19 +28,13 @@ public class ResourceInfo : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public string GetResourceName(){
         return type;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        print("Resource trigger entered");
+        //print("Resource trigger entered");
         //The only thing that should be colliding is the player, but let's have a check anyways.
         if (other.gameObject.tag == "Player")
         {
@@ -54,7 +48,7 @@ public class ResourceInfo : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        print("REsource trigger exited");
+        //print("Resource trigger exited");
         if (other.gameObject.tag == "Player")
         {
             PlayerController pc = other.gameObject.GetComponent<PlayerController>();
