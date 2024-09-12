@@ -9,14 +9,16 @@ public class PlayerController : MonoBehaviour
     public float speed = 10;
     public float jumpStrength = 10;
     public float jumpBuffer = 0.1f;
-
-    public string heldItem = "";
+    public int carryCapacity = 1;
     public bool readyToGive = false;
     public bool readyToTake = false;
     public GameObject target;
-    public GameObject holder;
-    public TMP_Text prompt;
+    public GameObject itemPrefab;
+    public Transform itemContainer;
+    public TMP_Text prompt, promptB;
 
+    Queue<string> itemNames = new Queue<string>();
+    Queue<GameObject> items = new Queue<GameObject>();
     Rigidbody2D rb;
     BoxCollider2D collider;
     float spacePressed = -100;
@@ -25,7 +27,6 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         collider = GetComponent<BoxCollider2D>();
-        holder.SetActive(false);
     }
 
     private void Update()
@@ -50,17 +51,23 @@ public class PlayerController : MonoBehaviour
         }
         rb.velocity = vel;
 
-        if(readyToGive && Input.GetKey(KeyCode.E)){
+        if(readyToGive && Input.GetKeyDown(KeyCode.E) && target.GetComponent<CustomerNeeds>().need == GetHeldItem() && items.Count > 0){
             GiveItem(target);
         }
 
-        if(readyToTake && Input.GetKey(KeyCode.E)){
+        if(readyToTake && Input.GetKeyDown(KeyCode.E)){
             TakeItem(target);
         }
 
-        if (heldItem != "" && Input.GetKey(KeyCode.Q)){
+        if (items.Count > 0 && Input.GetKeyDown(KeyCode.Q)){
             DropItem();
         }
+        UpdatePrompt();
+    }
+
+    public bool canCarryMore()
+    {
+        return items.Count < carryCapacity;
     }
 
     // private void OnTriggerEnter(Collider collider){
@@ -84,7 +91,9 @@ public class PlayerController : MonoBehaviour
 
     //Get functions
     public string GetHeldItem(){
-        return heldItem;
+        if (itemNames.Count == 0)
+            return "";
+        return itemNames.Peek();
     }
     public bool GetReadyToGive()
     {
@@ -94,46 +103,54 @@ public class PlayerController : MonoBehaviour
         return readyToTake;
     }
 
+    private void UpdatePrompt()
+    {
+        prompt.text = promptB.text = "";
+        if (readyToGive && target.GetComponent<CustomerNeeds>().need == GetHeldItem() && items.Count > 0)
+            prompt.text = "E to give";
+        if (readyToTake && canCarryMore())
+            prompt.text = "E to take";
+        if (items.Count > 0)
+            promptB.text = "Q to drop";
+    }
+
     public void CustomerCollision(GameObject customer){
         readyToGive = true;
         target = customer;
-        prompt.text = "E to give";
     }
 
     public void ResourceCollision(GameObject resource){
         readyToTake = true;
         target = resource;
-        prompt.text = "E to take";
     }
 
     public void ResetPrompt(){
         readyToTake = false;
         readyToGive = false;
         target = null;
-        prompt.text = "";
     }
 
     public void GiveItem(GameObject customer){
         customer.GetComponent<CustomerNeeds>().BecomeSatisfied();
-        heldItem = "";
         readyToGive = false;
         target = null;
-        holder.SetActive(false);
-        prompt.text = "";
+
+        DropItem();
     }
 
     public void TakeItem(GameObject item){
-        heldItem = item.GetComponent<ResourceInfo>().GetResourceName();
-        prompt.text = "Q to drop";
-        target = null;
-        readyToTake = false;
-        holder.SetActive(true);
-        holder.GetComponent<SpriteRenderer>().sprite = GameManager.Game.getSprite(heldItem);
+        string name = item.GetComponent<ResourceInfo>().GetResourceName();
+        GameObject obj = Instantiate(itemPrefab, itemContainer);
+        Sprite sprite = GameManager.Game.getSprite(name);
+        obj.GetComponent<SpriteRenderer>().sprite = sprite;
+        obj.GetComponent<RectTransform>().sizeDelta = sprite.bounds.size;
+        itemNames.Enqueue(name);
+        items.Enqueue(obj);
+        readyToTake = canCarryMore();
     }
 
     public void DropItem(){
-        heldItem = "";
-        holder.SetActive(false);
-        prompt.text = "";
+        Destroy(items.Dequeue());
+        itemNames.Dequeue();
     }
 }

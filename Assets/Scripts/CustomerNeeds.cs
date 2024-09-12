@@ -108,11 +108,8 @@ public class CustomerNeeds : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other){
         //print("Trigger entered");
         //The only thing that should be colliding is the player, but let's have a check anyways.
-        if (other.gameObject.tag == "Player"){
-            PlayerController pc = other.gameObject.GetComponent<PlayerController>();
-            if(pc.GetHeldItem() != "" && pc.GetHeldItem() == need){
-                pc.CustomerCollision(gameObject);
-            }
+        if (other.TryGetComponent(out PlayerController player)){
+            player.CustomerCollision(gameObject);
         }
     }
 

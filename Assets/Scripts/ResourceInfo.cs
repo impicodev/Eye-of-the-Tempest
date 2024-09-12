@@ -36,26 +36,19 @@ public class ResourceInfo : MonoBehaviour
     {
         //print("Resource trigger entered");
         //The only thing that should be colliding is the player, but let's have a check anyways.
-        if (other.gameObject.tag == "Player")
+        if (other.TryGetComponent(out PlayerController player))
         {
-            PlayerController pc = other.gameObject.GetComponent<PlayerController>();
-            if (pc.GetHeldItem() == "")
-            {
-                pc.ResourceCollision(gameObject);
-            }
+            if (player.canCarryMore())
+                player.ResourceCollision(gameObject);
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
         //print("Resource trigger exited");
-        if (other.gameObject.tag == "Player")
+        if (other.TryGetComponent(out PlayerController player))
         {
-            PlayerController pc = other.gameObject.GetComponent<PlayerController>();
-            if (pc.GetReadyToTake())
-            {
-                pc.ResetPrompt();
-            }
+            player.ResetPrompt();
         }
     }
 }
