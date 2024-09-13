@@ -7,23 +7,22 @@ public class CustomerNeeds : MonoBehaviour
 {
     public string need = ""; //usually an empty string; either "Food" or "Water" otherwise
     public float happinessLoss = 10; //happiness lost after timer ends (max happiness = 100)
-    public float minInactive = 6, maxInactive = 15;//inactive for random amount of time in this range
-    public float angerThreshold; //amount of time before the customer gets angry default=30
+    public AnimationCurve patienceCurve;
 
     public GameObject needBubble;
     public GameObject parentCar;
     public SpriteRenderer needIcon;
-    public GameObject needBar;
+    public Slider needBar;
     public GameObject indicatorPrefab;
     public SpriteRenderer sprite;
 
     private GameObject indicator;
     private float timer;
+    private float patience;
 
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(DetermineNeed());
         if(parentCar == null){
             parentCar = gameObject.transform.parent.parent.gameObject;
         }
@@ -34,16 +33,16 @@ public class CustomerNeeds : MonoBehaviour
         if (need != "")
         {
             timer += Time.deltaTime;
-            needBar.transform.localScale = new Vector3(1 - timer / angerThreshold, needBar.transform.localScale.y, 1);
-            if (timer >= angerThreshold)
+            needBar.normalizedValue = 1 - timer / patience;
+            if (timer >= patience)
             {
                 Debug.Log("Customer at " + transform.position + " was angered >:(");
                 GameManager.Game.customerAngered(happinessLoss);
                 BecomeSatisfied();
-                StartCoroutine(DetermineNeed());
             }
         }
 
+        needBubble.GetComponent<SpriteRenderer>().color = new Color(1, 1 - timer / patience, 1 - timer / patience);
         if (sprite.isVisible)
         {
             if (indicator != null)
@@ -64,7 +63,7 @@ public class CustomerNeeds : MonoBehaviour
                 float scale = Mathf.Max(0.4f, 1 - (distance - 13) / 50);
                 indicator.GetComponent<RectTransform>().sizeDelta = Vector2.one * 140 * scale;
                 indicator.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = Vector2.one * 80 * scale;
-                indicator.GetComponent<Image>().color = needBubble.GetComponent<SpriteRenderer>().color = new Color(1, 1 - timer / angerThreshold, 1 - timer / angerThreshold);
+                indicator.GetComponent<Image>().color = new Color(1, 1 - timer / patience, 1 - timer / patience);
             }
         }
     }
@@ -75,34 +74,26 @@ public class CustomerNeeds : MonoBehaviour
 
     //Ok. Every x seconds there is a possibility that the customer will want something.
     //Possibly this can later be updated to create more variation by creating a range around needDelay.
-    IEnumerator DetermineNeed(){
-        yield return new WaitForSeconds(Random.Range(minInactive, maxInactive));
-        //Roll 0-5; 0=water, 1=food
-        int randomRoll = Random.Range(0, 5);
-        switch(randomRoll){
+    public void DetermineNeed(){
+        //Roll 0-1; 0=water, 1=food
+        int randomRoll = Random.Range(0, 2);
+        switch (randomRoll){
             case(0):
                 need = "Water";
-                timer = 0;
-                needBubble.SetActive(true);
-                needIcon.sprite = GameManager.Game.getSprite(need);
                 break;
             case(1):
                 need = "Food";
-                timer = 0;
-                needBubble.SetActive(true);
-                needIcon.sprite = GameManager.Game.getSprite(need);
-                break;
-            default:
-                StartCoroutine(DetermineNeed());
                 break;
         }
+        timer = 0;
+        patience = patienceCurve.Evaluate(GameManager.Game.timer);
+        needBubble.SetActive(true);
+        needIcon.sprite = GameManager.Game.getSprite(need);
     }
 
     public void BecomeSatisfied(){
-        needBar.transform.localScale = new Vector3(1f, 0.05f, 0);
         needBubble.SetActive(false);
         need = "";
-        StartCoroutine(DetermineNeed());
     }
 
     private void OnTriggerEnter2D(Collider2D other){
