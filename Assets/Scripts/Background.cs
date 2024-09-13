@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Background : MonoBehaviour
 {
-    public int scrollSpeed;
+    public AnimationCurve scrollSpeed;
 
     // Update is called once per frame
     void Update()
@@ -15,6 +15,6 @@ public class Background : MonoBehaviour
         else if (gameObject.name == "Bushes" && transform.position.x <= -52){
             gameObject.transform.position += new Vector3(52, 0, 0); //dont even piss me off lad why tf is it 38.4 unity
         }
-        gameObject.transform.Translate(new Vector3(scrollSpeed, 0, 0)*Time.deltaTime);
+        gameObject.transform.Translate(new Vector3(scrollSpeed.Evaluate(GameManager.Game.timer), 0, 0)*Time.deltaTime);
     }
 }

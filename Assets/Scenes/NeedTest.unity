@@ -2023,7 +2023,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6353f84c2bf3e684a9628e553af92445, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scrollSpeed: -15
+  scrollSpeed:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.010775862
+      value: -3.2297475
+      inSlope: -0.01718977
+      outSlope: -0.01718977
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.11982549
+    - serializedVersion: 3
+      time: 551.3107
+      value: -16.155151
+      inSlope: -0.015374973
+      outSlope: -0.015374973
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.13110663
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1202.267
+      value: -30.005585
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1019066433
 GameObject:
   m_ObjectHideFlags: 0
@@ -3116,7 +3148,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6353f84c2bf3e684a9628e553af92445, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scrollSpeed: -10
+  scrollSpeed:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.0000014305115
+      value: -2.0126681
+      inSlope: -0.020266972
+      outSlope: -0.020266972
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 493.42847
+      value: -12.01297
+      inSlope: -0.014354551
+      outSlope: -0.014354551
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1203.0819
+      value: -18.003956
+      inSlope: -0.008442129
+      outSlope: -0.008442129
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
