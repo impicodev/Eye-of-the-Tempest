@@ -441,7 +441,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -40}
-  m_SizeDelta: {x: 1200, y: 80}
+  m_SizeDelta: {x: 800, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &149997068
 MonoBehaviour:
@@ -531,6 +531,39 @@ MonoBehaviour:
   leftContainer: {fileID: 1290837071}
   rightContainer: {fileID: 1304303051}
   player: {fileID: 1460553304}
+  difficultyCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.9342581
+      inSlope: 0.015882036
+      outSlope: 0.015882036
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.024662863
+    - serializedVersion: 3
+      time: 180.82755
+      value: 3.4204862
+      inSlope: 0.009428722
+      outSlope: 0.009428722
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.09411522
+    - serializedVersion: 3
+      time: 1003.1316
+      value: 10.085114
+      inSlope: 0.014250141
+      outSlope: 0.014250141
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.086900555
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!4 &155854938
 Transform:
   m_ObjectHideFlags: 0
@@ -1163,9 +1196,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1179117942}
     m_Modifications:
+    - target: {fileID: 45663800879410874, guid: a845d0268c949f848a2a3b3024e2e4ae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 84712896463715515, guid: a845d0268c949f848a2a3b3024e2e4ae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2157506262097407486, guid: a845d0268c949f848a2a3b3024e2e4ae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2501306263750673957, guid: a845d0268c949f848a2a3b3024e2e4ae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2537958543740261412, guid: a845d0268c949f848a2a3b3024e2e4ae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3484952341073950159, guid: a845d0268c949f848a2a3b3024e2e4ae, type: 3}
       propertyPath: m_Name
       value: MiddleTrainCar (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4497857594730452832, guid: a845d0268c949f848a2a3b3024e2e4ae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4900132328236560213, guid: a845d0268c949f848a2a3b3024e2e4ae, type: 3}
       propertyPath: m_Color.b
@@ -1273,9 +1330,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1179117942}
     m_Modifications:
+    - target: {fileID: 45663800879410874, guid: a845d0268c949f848a2a3b3024e2e4ae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 84712896463715515, guid: a845d0268c949f848a2a3b3024e2e4ae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2157506262097407486, guid: a845d0268c949f848a2a3b3024e2e4ae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2501306263750673957, guid: a845d0268c949f848a2a3b3024e2e4ae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2537958543740261412, guid: a845d0268c949f848a2a3b3024e2e4ae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3484952341073950159, guid: a845d0268c949f848a2a3b3024e2e4ae, type: 3}
       propertyPath: m_Name
       value: MiddleTrainCar (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4497857594730452832, guid: a845d0268c949f848a2a3b3024e2e4ae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4900132328236560213, guid: a845d0268c949f848a2a3b3024e2e4ae, type: 3}
       propertyPath: m_Color.b
@@ -1938,9 +2019,25 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.81886786
       objectReference: {fileID: 0}
+    - target: {fileID: 1584029666959465154, guid: f33f1e2f34e29414bb1e5b4ebffc3336, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3918417220337672284, guid: f33f1e2f34e29414bb1e5b4ebffc3336, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4195428585255723819, guid: f33f1e2f34e29414bb1e5b4ebffc3336, type: 3}
       propertyPath: m_Name
       value: FrontTrainCar
+      objectReference: {fileID: 0}
+    - target: {fileID: 5093825786409924838, guid: f33f1e2f34e29414bb1e5b4ebffc3336, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5184509052365420193, guid: f33f1e2f34e29414bb1e5b4ebffc3336, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6963522577571417960, guid: f33f1e2f34e29414bb1e5b4ebffc3336, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1980,6 +2077,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6963522577571417960, guid: f33f1e2f34e29414bb1e5b4ebffc3336, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7235466725570186303, guid: f33f1e2f34e29414bb1e5b4ebffc3336, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7289778266640777848, guid: f33f1e2f34e29414bb1e5b4ebffc3336, type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
