@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ResourceInfo : MonoBehaviour
 {
     public string type;
-    // public List<Sprite> sprites; //for when we have actual sprites!
+    public List<Sprite> sprites; //for when we have actual sprites!
     public List<Color> colors; //temp, for capsule sprites
     public SpriteRenderer sr;
     // Start is called before the first frame update
@@ -14,12 +14,12 @@ public class ResourceInfo : MonoBehaviour
     {
         switch(type){
             case("Water"):
-                // sr.sprite = sprites[0];
-                sr.color = colors[0];
+                sr.sprite = sprites[0];
+                // sr.color = colors[0];
                 break;
             case("Food"):
-                // sr.sprite = sprites[1];
-                sr.color = colors[1];
+                sr.sprite = sprites[1];
+                // sr.color = colors[1];
                 break;
             case("Coal"):
                 // sr.sprite = sprites[2];
