@@ -6,11 +6,12 @@ TagManager:
   tags:
   - Customer
   - Resource
+  - Lightning
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Waiter
   - Water
   - UI
   - 

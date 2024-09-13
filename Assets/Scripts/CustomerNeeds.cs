@@ -111,6 +111,11 @@ public class CustomerNeeds : MonoBehaviour
         if (other.TryGetComponent(out PlayerController player)){
             player.CustomerCollision(gameObject);
         }
+        //oops lightning bolt time
+        if(other.tag == "Lightning"){
+            GameManager.Game.customerAngered(5);
+            print("Ouch");
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other){
