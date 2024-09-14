@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
             GiveItem(target);
         }
 
-        if(readyToTake && Input.GetKeyDown(KeyCode.E)){
+        if(readyToTake && canCarryMore() && Input.GetKeyDown(KeyCode.E)){
             TakeItem(target);
         }
 
@@ -146,7 +146,6 @@ public class PlayerController : MonoBehaviour
         obj.GetComponent<RectTransform>().sizeDelta = sprite.bounds.size;
         itemNames.Enqueue(name);
         items.Enqueue(obj);
-        readyToTake = canCarryMore();
     }
 
     public void DropItem(){
