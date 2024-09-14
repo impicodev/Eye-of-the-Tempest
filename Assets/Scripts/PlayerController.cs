@@ -16,17 +16,21 @@ public class PlayerController : MonoBehaviour
     public GameObject itemPrefab;
     public Transform itemContainer;
     public TMP_Text prompt, promptB;
+    public Transform sprite;
 
     Queue<string> itemNames = new Queue<string>();
     Queue<GameObject> items = new Queue<GameObject>();
     Rigidbody2D rb;
     BoxCollider2D collider;
     float spacePressed = -100;
+    Animator animator;
+    float lastGive = -10;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         collider = GetComponent<BoxCollider2D>();
+        animator = sprite.GetComponent<Animator>();
     }
 
     private void Update()
@@ -34,20 +38,22 @@ public class PlayerController : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal");
         Vector3 vel = rb.velocity;
         vel.x = horizontal * speed;
+        animator.SetBool("Running", Input.GetAxisRaw("Horizontal") != 0);
+        animator.SetBool("Happy", Time.time - lastGive <= 1.5f);
+        sprite.localScale = new Vector3(vel.x < 0 ? -1 : 1, 1, 1);
 
         if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow))
             spacePressed = Time.time;
 
-        if (Time.time - spacePressed <= jumpBuffer) {
+        Vector2 pos = rb.position;
+        pos.y = collider.bounds.min.y - 0.05f;
+        RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.down);
+        bool grounded = hit.collider != null && !hit.collider.isTrigger && pos.y - hit.point.y < 0.05f;
+        animator.SetBool("Grounded", grounded);
 
-            Vector2 pos = rb.position;
-            pos.y = collider.bounds.min.y - 0.05f;
-            RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.down);
-            if (hit.collider != null && !hit.collider.isTrigger && pos.y - hit.point.y < 0.05f)
-            {
-                spacePressed = -100;
-                vel.y = jumpStrength;
-            }
+        if (Time.time - spacePressed <= jumpBuffer && grounded) {
+            spacePressed = -100;
+            vel.y = jumpStrength;
         }
         rb.velocity = vel;
 
@@ -142,8 +148,9 @@ public class PlayerController : MonoBehaviour
 
     public void GiveItem(GameObject customer){
         customer.GetComponent<CustomerNeeds>().BecomeSatisfied();
-        GameManager.Game.orderCompleted();
-
+        if (customer.GetComponent<CustomerNeeds>().isCustomer)
+            GameManager.Game.orderCompleted();
+        lastGive = Time.time;
         DropItem();
     }
 

@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text upgradeCounter, orderCounter;
     public GameObject upgradeUI;
     public float fuelLoss = 1.5f;
+    public float happinessLoss = 2;
     public float coalRefill = 50;
 
     public float timer;
@@ -63,6 +64,7 @@ public class GameManager : MonoBehaviour
         if (ordersCompleted == upgradeMilestones[milestoneIdx])
         {
             ++milestoneIdx;
+            upgradeMilestones[milestoneIdx] += upgradeMilestones[milestoneIdx - 1];
             upgradeUI.SetActive(true);
             Time.timeScale = 0;
         }
@@ -88,10 +90,15 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        fuel -= fuelLoss * Time.deltaTime;
+        fuel = Mathf.Max(0, fuel - fuelLoss * Time.deltaTime);
         fuelBar.normalizedValue = fuel / 100;
         if (fuel <= 0)
-            gameOver();
+        {
+            happiness -= happinessLoss * Time.deltaTime;
+            happinessBar.normalizedValue = happiness / 100;
+            if (happiness <= 0)
+                gameOver();
+        }
 
         timer += Time.deltaTime;
         int goal = (int)difficultyCurve.Evaluate(timer);
