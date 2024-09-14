@@ -8,17 +8,25 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Game;
-    public Slider happinessBar;
+    public Slider happinessBar, fuelBar;
     public List<Sprite> itemSprites;
     public Transform leftContainer, rightContainer;
     public PlayerController player;
     public AnimationCurve difficultyCurve;
+    public int[] upgradeMilestones;
+    public AudioData purchaseSFX;
+    public TMP_Text upgradeCounter, orderCounter;
+    public GameObject upgradeUI;
+    public float fuelLoss = 1.5f;
+    public float coalRefill = 50;
 
-    [System.NonSerialized]
     public float timer;
+    private int ordersCompleted = 0;
     private float happiness = 100;
+    private float fuel = 100;
     private CustomerNeeds[] customers;
     private int queuedOrders = 0;
+    int milestoneIdx = 0;
 
     private void Awake()
     {
@@ -29,6 +37,8 @@ public class GameManager : MonoBehaviour
         }
         Game = this;
         customers = GameObject.FindObjectsOfType<CustomerNeeds>();
+        upgradeCounter.text = "Next Upgrade in " + upgradeMilestones[0] + " orders";
+        orderCounter.text = "Orders Filled: 0";
     }
 
     IEnumerator newOrder(float delay)
@@ -36,7 +46,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(delay);
         List<CustomerNeeds> inactive = new List<CustomerNeeds>();
         foreach (CustomerNeeds customer in customers)
-            if (customer.need == "")
+            if (customer.need == "" && customer.isCustomer)
                 inactive.Add(customer);
 
         --queuedOrders;
@@ -47,13 +57,47 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void orderCompleted()
+    {
+        ++ordersCompleted;
+        if (ordersCompleted == upgradeMilestones[milestoneIdx])
+        {
+            ++milestoneIdx;
+            upgradeUI.SetActive(true);
+            Time.timeScale = 0;
+        }
+        upgradeCounter.text = "Next Upgrade in " + (upgradeMilestones[milestoneIdx] - ordersCompleted) + " orders";
+        orderCounter.text = "Orders Filled: " + ordersCompleted;
+    }
+
+    public void speedUpgrade()
+    {
+        Time.timeScale = 1;
+        upgradeUI.SetActive(false);
+        AudioManager.PlayOneShotAudio(purchaseSFX);
+        player.speed += 3;
+    }
+
+    public void capacityUpgrade()
+    {
+        Time.timeScale = 1;
+        upgradeUI.SetActive(false);
+        AudioManager.PlayOneShotAudio(purchaseSFX);
+        ++player.carryCapacity;
+    }
+
     private void Update()
     {
+        fuel -= fuelLoss * Time.deltaTime;
+        fuelBar.normalizedValue = fuel / 100;
+        if (fuel <= 0)
+            gameOver();
+
         timer += Time.deltaTime;
         int goal = (int)difficultyCurve.Evaluate(timer);
         int current = 0;
         foreach (CustomerNeeds customer in customers)
-            if (customer.need != "")
+            if (customer.need != "" && customer.isCustomer)
                 ++current;
         
         while (current + queuedOrders < goal)
@@ -61,6 +105,11 @@ public class GameManager : MonoBehaviour
             ++queuedOrders;
             StartCoroutine(newOrder(Random.Range(0, Mathf.Max(2, 6 - (goal - current - queuedOrders)))));
         }
+    }
+
+    public void shovelCoal()
+    {
+        fuel = Mathf.Min(100, fuel + coalRefill);
     }
 
     public void customerAngered(float happinessLoss)
@@ -86,6 +135,8 @@ public class GameManager : MonoBehaviour
                 return itemSprites[1];
             case ("Coal"):
                 return itemSprites[2];
+            case ("Patty"):
+                return itemSprites[3];
         }
         return null;
     }

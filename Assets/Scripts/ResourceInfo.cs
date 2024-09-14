@@ -9,6 +9,13 @@ public class ResourceInfo : MonoBehaviour
     public List<Sprite> sprites; //for when we have actual sprites!
     public SpriteRenderer sr;
     public AudioData takeSFX;
+    public int available = 1;
+    public float pattyCookTime = 5;
+    public Slider pattyTimer;
+    public AudioData pattyTimerSFX, pattyFinishSFX;
+    public GameObject burgerPrefab;
+    public Transform burgerContainer;
+    public float timer = -1;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +29,26 @@ public class ResourceInfo : MonoBehaviour
             case("Coal"):
                 sr.sprite = sprites[2];
                 break;
+            case ("Patty"):
+                sr.sprite = sprites[3];
+                break;
+        }
+    }
+
+    private void Update()
+    {
+        if (timer >= 0)
+        {
+            timer += Time.deltaTime;
+            pattyTimer.value = timer / pattyCookTime;
+            if (timer >= pattyCookTime)
+            {
+                timer = -1;
+                pattyTimer.value = 0;
+                ++available;
+                Instantiate(burgerPrefab, burgerContainer);
+                AudioManager.PlayOneShotAudio(pattyFinishSFX);
+            }
         }
     }
 
@@ -35,8 +62,7 @@ public class ResourceInfo : MonoBehaviour
         //The only thing that should be colliding is the player, but let's have a check anyways.
         if (other.TryGetComponent(out PlayerController player))
         {
-            if (player.canCarryMore())
-                player.ResourceCollision(gameObject);
+            player.ResourceCollision(gameObject);
         }
     }
 

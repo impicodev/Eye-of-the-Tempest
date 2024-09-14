@@ -55,7 +55,14 @@ public class PlayerController : MonoBehaviour
             GiveItem(target);
         }
 
-        if(readyToTake && canCarryMore() && Input.GetKeyDown(KeyCode.E)){
+        if (readyToTake && Input.GetKeyDown(KeyCode.E) && GetHeldItem() == "Patty" && target.GetComponent<ResourceInfo>().type == "Food" && target.GetComponent<ResourceInfo>().timer == -1)
+        {
+            AudioManager.PlayOneShotAudio(target.GetComponent<ResourceInfo>().pattyTimerSFX);
+            target.GetComponent<ResourceInfo>().timer = 0;
+            DropItem();
+        }
+        else if(readyToTake && canCarryMore() && Input.GetKeyDown(KeyCode.E) && target.GetComponent<ResourceInfo>().available > 0)
+        {
             TakeItem(target);
         }
 
@@ -106,10 +113,12 @@ public class PlayerController : MonoBehaviour
     private void UpdatePrompt()
     {
         prompt.text = promptB.text = "";
+        if (readyToTake && GetHeldItem() == "Patty" && target.GetComponent<ResourceInfo>().type == "Food" && target.GetComponent<ResourceInfo>().timer == -1)
+            prompt.text = "E to cook patty";
+        else if (readyToTake && canCarryMore() && target.GetComponent<ResourceInfo>().available > 0)
+            prompt.text = "E to take";
         if (readyToGive && target.GetComponent<CustomerNeeds>().need == GetHeldItem() && items.Count > 0)
             prompt.text = "E to give";
-        if (readyToTake && canCarryMore())
-            prompt.text = "E to take";
         if (items.Count > 0)
             promptB.text = "Q to drop";
     }
@@ -120,6 +129,7 @@ public class PlayerController : MonoBehaviour
     }
 
     public void ResourceCollision(GameObject resource){
+
         readyToTake = true;
         target = resource;
     }
@@ -132,8 +142,7 @@ public class PlayerController : MonoBehaviour
 
     public void GiveItem(GameObject customer){
         customer.GetComponent<CustomerNeeds>().BecomeSatisfied();
-        readyToGive = false;
-        target = null;
+        GameManager.Game.orderCompleted();
 
         DropItem();
     }
@@ -146,7 +155,11 @@ public class PlayerController : MonoBehaviour
         obj.GetComponent<RectTransform>().sizeDelta = sprite.bounds.size;
         itemNames.Enqueue(name);
         items.Enqueue(obj);
+        if (target.GetComponent<ResourceInfo>().type == "Food")
+            target.GetComponent<ResourceInfo>().available--;
 
+        if (target.GetComponent<ResourceInfo>().burgerContainer)
+            Destroy(target.GetComponent<ResourceInfo>().burgerContainer.GetChild(0).gameObject);
         AudioManager.PlayOneShotAudio(target.GetComponent<ResourceInfo>().takeSFX);
     }
 

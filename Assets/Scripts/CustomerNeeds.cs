@@ -8,6 +8,7 @@ public class CustomerNeeds : MonoBehaviour
     public string need = ""; //usually an empty string; either "Food" or "Water" otherwise
     public float happinessLoss = 10; //happiness lost after timer ends (max happiness = 100)
     public AnimationCurve patienceCurve;
+    public bool isCustomer = true;
 
     public GameObject needBubble;
     public GameObject parentCar;
@@ -31,6 +32,7 @@ public class CustomerNeeds : MonoBehaviour
 
     void Update()
     {
+        if (!isCustomer) return;
         if (need != "")
         {
             timer += Time.deltaTime;
@@ -39,11 +41,10 @@ public class CustomerNeeds : MonoBehaviour
             {
                 Debug.Log("Customer at " + transform.position + " was angered >:(");
                 GameManager.Game.customerAngered(happinessLoss);
-                BecomeSatisfied();
+                BecomeSatisfied(false);
             }
         }
 
-        needBubble.GetComponent<SpriteRenderer>().color = new Color(1, 1 - timer / patience, 1 - timer / patience);
         if (sprite.isVisible)
         {
             if (indicator != null)
@@ -56,15 +57,15 @@ public class CustomerNeeds : MonoBehaviour
                 bool isLeft = transform.position.x < Camera.main.transform.position.x;
                 indicator = Instantiate(indicatorPrefab, isLeft ? GameManager.Game.leftContainer : GameManager.Game.rightContainer);
                 indicator.transform.localScale = new Vector3(isLeft ? 1 : -1, 1, 1);
-                indicator.transform.GetChild(0).GetComponent<Image>().sprite = GameManager.Game.getSprite(need);
+                indicator.transform.GetChild(2).GetComponent<Image>().sprite = GameManager.Game.getSprite(need);
             }
             else
             {
                 float distance = Vector2.Distance(transform.position, GameManager.Game.player.transform.position);
-                float scale = Mathf.Max(0.4f, 1 - (distance - 13) / 50);
+                float scale = Mathf.Max(0.55f, 1 - (distance - 13) / 50);
                 indicator.GetComponent<RectTransform>().sizeDelta = Vector2.one * 140 * scale;
-                indicator.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = Vector2.one * 80 * scale;
-                indicator.GetComponent<Image>().color = new Color(1, 1 - timer / patience, 1 - timer / patience);
+                indicator.transform.GetChild(2).GetComponent<RectTransform>().sizeDelta = Vector2.one * 80 * scale;
+                indicator.GetComponent<Slider>().value = 1 - timer / patience;
             }
         }
     }
@@ -77,13 +78,13 @@ public class CustomerNeeds : MonoBehaviour
     //Possibly this can later be updated to create more variation by creating a range around needDelay.
     public void DetermineNeed(){
         //Roll 0-1; 0=water, 1=food
-        int randomRoll = Random.Range(0, 2);
+        int randomRoll = Random.Range(0, 3);
         switch (randomRoll){
             case(0):
-                need = "Water";
-                break;
-            case(1):
                 need = "Food";
+                break;
+            default:
+                need = "Water";
                 break;
         }
         timer = 0;
@@ -92,10 +93,14 @@ public class CustomerNeeds : MonoBehaviour
         needIcon.sprite = GameManager.Game.getSprite(need);
     }
 
-    public void BecomeSatisfied(){
-        AudioManager.PlayOneShotAudio(satisfiedSFX);
+    public void BecomeSatisfied(bool playSFX = true){
+        if (playSFX)
+            AudioManager.PlayOneShotAudio(satisfiedSFX);
         needBubble.SetActive(false);
-        need = "";
+        if (isCustomer)
+            need = "";
+        else
+            GameManager.Game.shovelCoal();
     }
 
     private void OnTriggerEnter2D(Collider2D other){
