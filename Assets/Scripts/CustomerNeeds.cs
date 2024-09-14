@@ -15,6 +15,7 @@ public class CustomerNeeds : MonoBehaviour
     public Slider needBar;
     public GameObject indicatorPrefab;
     public SpriteRenderer sprite;
+    public AudioData satisfiedSFX;
 
     private GameObject indicator;
     private float timer;
@@ -92,6 +93,7 @@ public class CustomerNeeds : MonoBehaviour
     }
 
     public void BecomeSatisfied(){
+        AudioManager.PlayOneShotAudio(satisfiedSFX);
         needBubble.SetActive(false);
         need = "";
     }

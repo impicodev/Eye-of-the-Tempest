@@ -937,6 +937,14 @@ PrefabInstance:
       propertyPath: type
       value: Coal
       objectReference: {fileID: 0}
+    - target: {fileID: 5748203544357214063, guid: 13b08ec361c097840935ad34bb414b00, type: 3}
+      propertyPath: takeSFX.m_audioClipData.m_volume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5748203544357214063, guid: 13b08ec361c097840935ad34bb414b00, type: 3}
+      propertyPath: takeSFX.m_audioClipData.m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: cf4ae463c0ea240408ac843dcb2d70e9, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

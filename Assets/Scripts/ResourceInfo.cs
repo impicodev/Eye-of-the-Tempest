@@ -8,6 +8,7 @@ public class ResourceInfo : MonoBehaviour
     public string type;
     public List<Sprite> sprites; //for when we have actual sprites!
     public SpriteRenderer sr;
+    public AudioData takeSFX;
     // Start is called before the first frame update
     void Start()
     {

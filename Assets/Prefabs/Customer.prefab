@@ -172,6 +172,15 @@ MonoBehaviour:
   needBar: {fileID: 1903409514385271755}
   indicatorPrefab: {fileID: 4128659121990465070, guid: 0c54f8c6a5db18445abd00a33e1d877a, type: 3}
   sprite: {fileID: 1719589249226602731}
+  satisfiedSFX:
+    audioSource: {fileID: 0}
+    m_audioClipData:
+      m_audioClip: {fileID: 8300000, guid: 9aa4f85d4a9fdb449a49c67e155bb562, type: 3}
+      m_volume: 1
+      m_waitUntil: 0
+      m_pitch: 1
+      m_pitchVariation: 0
+      lastStartTime: 0
 --- !u!61 &41637330715593582
 BoxCollider2D:
   m_ObjectHideFlags: 0

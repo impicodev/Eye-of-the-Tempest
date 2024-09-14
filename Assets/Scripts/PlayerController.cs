@@ -146,6 +146,8 @@ public class PlayerController : MonoBehaviour
         obj.GetComponent<RectTransform>().sizeDelta = sprite.bounds.size;
         itemNames.Enqueue(name);
         items.Enqueue(obj);
+
+        AudioManager.PlayOneShotAudio(target.GetComponent<ResourceInfo>().takeSFX);
     }
 
     public void DropItem(){
