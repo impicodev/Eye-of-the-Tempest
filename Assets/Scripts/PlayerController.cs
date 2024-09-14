@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public Transform itemContainer;
     public TMP_Text prompt, promptB;
     public Transform sprite;
+    public AudioSource metalFootsteps, woodFootsteps;
 
     Queue<string> itemNames = new Queue<string>();
     Queue<GameObject> items = new Queue<GameObject>();
@@ -38,7 +39,8 @@ public class PlayerController : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal");
         Vector3 vel = rb.velocity;
         vel.x = horizontal * speed;
-        animator.SetBool("Running", Input.GetAxisRaw("Horizontal") != 0);
+        bool running = Input.GetAxisRaw("Horizontal") != 0;
+        animator.SetBool("Running", running);
         animator.SetBool("Happy", Time.time - lastGive <= 1.5f);
         sprite.localScale = new Vector3(vel.x < 0 ? -1 : 1, 1, 1);
 
@@ -50,6 +52,21 @@ public class PlayerController : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.down);
         bool grounded = hit.collider != null && !hit.collider.isTrigger && pos.y - hit.point.y < 0.05f;
         animator.SetBool("Grounded", grounded);
+        bool onMetal = hit.collider.tag == "Metal";
+        if ((onMetal && grounded && running) != metalFootsteps.isPlaying)
+        {
+            if (metalFootsteps.isPlaying)
+                metalFootsteps.Pause();
+            else
+                metalFootsteps.UnPause();
+        }
+        if ((!onMetal && grounded && running) != woodFootsteps.isPlaying)
+        {
+            if (woodFootsteps.isPlaying)
+                woodFootsteps.Pause();
+            else
+                woodFootsteps.UnPause();
+        }
 
         if (Time.time - spacePressed <= jumpBuffer && grounded) {
             spacePressed = -100;

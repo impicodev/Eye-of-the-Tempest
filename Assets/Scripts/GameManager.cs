@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     public PlayerController player;
     public AnimationCurve difficultyCurve;
     public int[] upgradeMilestones;
-    public AudioData purchaseSFX;
+    public AudioData purchaseSFX, angrySFX, orderSFX;
     public TMP_Text upgradeCounter, orderCounter;
     public GameObject upgradeUI;
     public float fuelLoss = 1.5f;
@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
         customers = GameObject.FindObjectsOfType<CustomerNeeds>();
         upgradeCounter.text = "Next Upgrade in " + upgradeMilestones[0] + " orders";
         orderCounter.text = "Orders Filled: 0";
+        fuelBar.gameObject.SetActive(false);
     }
 
     IEnumerator newOrder(float delay)
@@ -63,6 +64,10 @@ public class GameManager : MonoBehaviour
         ++ordersCompleted;
         if (ordersCompleted == upgradeMilestones[milestoneIdx])
         {
+            if (milestoneIdx == 1)
+            {
+                fuelBar.gameObject.SetActive(true);
+            }
             ++milestoneIdx;
             upgradeMilestones[milestoneIdx] += upgradeMilestones[milestoneIdx - 1];
             upgradeUI.SetActive(true);
@@ -90,7 +95,9 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        fuel = Mathf.Max(0, fuel - fuelLoss * Time.deltaTime);
+        
+        if (milestoneIdx > 1)
+            fuel = Mathf.Max(0, fuel - fuelLoss * Time.deltaTime);
         fuelBar.normalizedValue = fuel / 100;
         if (fuel <= 0)
         {
@@ -121,6 +128,7 @@ public class GameManager : MonoBehaviour
 
     public void customerAngered(float happinessLoss)
     {
+        AudioManager.PlayOneShotAudio(angrySFX);
         happiness -= happinessLoss;
         happinessBar.normalizedValue = happiness / 100;
         if (happiness <= 0)

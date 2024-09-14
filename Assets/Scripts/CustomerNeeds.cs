@@ -16,7 +16,7 @@ public class CustomerNeeds : MonoBehaviour
     public Slider needBar;
     public GameObject indicatorPrefab;
     public SpriteRenderer sprite;
-    public AudioData satisfiedSFX;
+    public AudioData satisfiedSFX, orderSFX, angrySFX;
 
     private GameObject indicator;
     private float timer;
@@ -40,10 +40,14 @@ public class CustomerNeeds : MonoBehaviour
             if (timer >= patience)
             {
                 Debug.Log("Customer at " + transform.position + " was angered >:(");
+                AudioManager.PlayOneShotAudio(angrySFX);
                 GameManager.Game.customerAngered(happinessLoss);
                 BecomeSatisfied(false);
             }
         }
+
+        //if (need != "")
+        //    needBubble.GetComponent<SpriteRenderer>().color = new Color(1, 1 - timer / patience, 1 - timer / patience);
 
         if (sprite.isVisible)
         {
@@ -88,6 +92,7 @@ public class CustomerNeeds : MonoBehaviour
                 break;
         }
         timer = 0;
+        AudioManager.PlayOneShotAudio(orderSFX);
         patience = patienceCurve.Evaluate(GameManager.Game.timer);
         needBubble.SetActive(true);
         needIcon.sprite = GameManager.Game.getSprite(need);
