@@ -5212,6 +5212,14 @@ PrefabInstance:
       propertyPath: bg
       value: 
       objectReference: {fileID: 2146143434}
+    - target: {fileID: 8900108627191035012, guid: f33f1e2f34e29414bb1e5b4ebffc3336, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8900108627191035012, guid: f33f1e2f34e29414bb1e5b4ebffc3336, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
