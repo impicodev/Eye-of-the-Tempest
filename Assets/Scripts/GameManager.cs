@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     public float fuelLoss = 1.5f;
     public float happinessLoss = 2;
     public float coalRefill = 50;
+    public Storm storm;
 
     public float timer;
     private int ordersCompleted = 0;
@@ -40,26 +41,22 @@ public class GameManager : MonoBehaviour
         }
         Game = this;
         customers = GameObject.FindObjectsOfType<CustomerNeeds>();
-        upgradeCounter.text = "Next Upgrade in " + upgradeMilestones[0] + " orders";
-        orderCounter.text = "Orders Filled: 0";
+        upgradeCounter.text = "Upgrade in:\n" + upgradeMilestones[0] + " orders";
+        orderCounter.text = "Orders Filled:\n0";
         fuelBar.gameObject.SetActive(false);
-
-        StartCoroutine(showTutorial(new string[] {
-            "Welcome abord the Loco-Motive!",
-            "Use the ARROW keys to move around and SPACE to jump",
-            ".4",
-            "The passengers on this train are very needy! It's your job to keep them fed and happy",
-            "Water is available at the water dispenser, and the burgers are in the fridge. You might need to cook them first, though...",
-            "Customer orders will appear as bubbles above their heads and on the sides of the screen. Here comes your first one now!"
-        }));
     }
 
     private void Start(){
-        if (!PlayerPrefs.HasKey("Easy")){ //If easy isn't set, none of them are tbh. This should just be for first-time PlayerPrefs setup
-            PlayerPrefs.SetInt("Easy", 0);
-            PlayerPrefs.SetInt("Medium", 0);
-            PlayerPrefs.SetInt("Hard", 0);
-        }
+        StartCoroutine(showTutorial(new string[] {
+            ".1",
+            "Howdy there partner. You can use WASD  OR  ↑↓←→ to move, and press SPACE to jump.",
+            ".4",
+            "Now that you’ve got a handle on movin’ let’s get you workin’",
+            "These passengers might be needy but this IS yer one an’ only purpose, so I don’t wanna hear no complainin’",
+            "Tend to their food (burger icon) and beverage (water icon) needs before they lose their patience with ya.",
+            "Make sure you cook the patty (patty icon) from the fridge on the stove. Ain’t no one gettin’ sick on my watch.",
+            "Good luck, here comes your first order. Don't keep them waiting, or else!"
+        }));
     }
 
     IEnumerator newOrder(float delay)
@@ -138,9 +135,10 @@ public class GameManager : MonoBehaviour
                         clip = voice9;
                         break;
                 }
-                 if (Time.time - lastSpeech >= 0.6f)
+                 if (Time.time - lastSpeech >= 0.62f)
                 {
-                    AudioManager.PlayOneShotAudio(clip, volumeMultiplier:1.5f);
+                    Debug.Log("play");
+                    AudioManager.PlayOneShotAudio(clip);
                     lastSpeech = Time.time;
                 }
                 if (++cnt == 2)
@@ -159,6 +157,21 @@ public class GameManager : MonoBehaviour
     public void orderCompleted()
     {
         ++ordersCompleted;
+        if (ordersCompleted % 20 == 0)
+        {
+            StartCoroutine(storm.StartStorm());
+        }
+
+        if (ordersCompleted == 12)
+        {
+            fuelBar.gameObject.SetActive(true);
+            StartCoroutine(showTutorial(new string[] {
+                "Good smokin’ vamoose! Something’s happened to the conductor!",
+                "Looks like you’re gonna have to load the coal from the back to the engine in front!",
+                "Make sure to not run out of fuel, or else you risk sending the passengers into a frenzy"
+            }));
+        }
+
         if (ordersCompleted == upgradeMilestones[milestoneIdx])
         {
             ++milestoneIdx;
@@ -166,8 +179,8 @@ public class GameManager : MonoBehaviour
             upgradeUI.SetActive(true);
             player.lockControls = true;
         }
-        upgradeCounter.text = "Next Upgrade in " + (upgradeMilestones[milestoneIdx] - ordersCompleted) + " orders";
-        orderCounter.text = "Orders Filled: " + ordersCompleted;
+        upgradeCounter.text = "Upgrade in:\n" + (upgradeMilestones[milestoneIdx] - ordersCompleted) + " orders";
+        orderCounter.text = "Orders Filled:\n" + ordersCompleted;
     }
 
     public void speedUpgrade()
@@ -176,16 +189,6 @@ public class GameManager : MonoBehaviour
         upgradeUI.SetActive(false);
         AudioManager.PlayOneShotAudio(purchaseSFX);
         player.speed += 3;
-
-        if (milestoneIdx == 2)
-        {
-            StartCoroutine(showTutorial(new string[] {
-                    "Oh no! The conductor has mysteriously disappeared.",
-                    "Grab coal from the back of the train and bring it to the front to replenish fuel.",
-                    "If you run out of fuel the passengers will be very unhappy... so stay vigilant"
-                }));
-            fuelBar.gameObject.SetActive(true);
-        }
     }
 
     public void capacityUpgrade()
@@ -195,20 +198,19 @@ public class GameManager : MonoBehaviour
         AudioManager.PlayOneShotAudio(purchaseSFX);
         ++player.carryCapacity;
 
-        if (milestoneIdx == 2)
+        if (player.carryCapacity == 2)
         {
             StartCoroutine(showTutorial(new string[] {
-                    "Oh no! The conductor has mysteriously disappeared.",
-                    "Grab coal from the back of the train and bring it to the front to replenish fuel.",
-                    "If you run out of fuel the passengers will be very unhappy... so stay vigilant"
-                }));
-            fuelBar.gameObject.SetActive(true);
+                "Seems like you’ve got a little upgrade and can carry more than one item now.",
+                "But your systems are a little antiquated, so you can only deliver the item at the bottom of your stack.",
+                "Make sure you’ve wrapped your shiny metal head around that, lest you gotta feed a burger to the floor."
+            }));
         }
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
             mouseDown = true;
 
         if (player.lockControls) return;
@@ -228,7 +230,7 @@ public class GameManager : MonoBehaviour
         }
 
         timer += Time.deltaTime;
-        int goal = (int)difficultyCurve.Evaluate(timer);
+        int goal = (int)(difficultyCurve.Evaluate(timer) * (storm.storming ? 1.5f : 1));
         int current = 0;
         foreach (CustomerNeeds customer in customers)
             if (customer.need != "" && customer.isCustomer)
@@ -260,11 +262,9 @@ public class GameManager : MonoBehaviour
     private void gameOver()
     {
         // SceneManager.LoadScene("Title");
-        string difficulty = PlayerPrefs.GetString("Difficulty");
-        if (PlayerPrefs.GetInt(difficulty) < ordersCompleted)
-        {
-            PlayerPrefs.SetInt(difficulty, ordersCompleted);
-        }
+        PlayerPrefs.SetInt("Score", ordersCompleted);
+        PlayerPrefs.SetInt("Best", Mathf.Max(PlayerPrefs.GetInt("Best"), ordersCompleted));
+        SceneManager.LoadScene("GameOver");
     }
 
     public Sprite getSprite(string item)

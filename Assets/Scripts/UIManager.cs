@@ -9,12 +9,12 @@ public class UIManager : MonoBehaviour
 {
     public static AudioSource src;
     // public Image musicToggleImg;
-    //public Transform leftBox, rightBox;
+    public Transform leftBox, rightBox;
 
     void Awake()
     {
-        //leftBox.localScale = Vector3.one;
-        //leftBox.DOScaleX(0, 1f).SetEase(Ease.OutSine).SetUpdate(true);
+        leftBox.localScale = Vector3.one;
+        leftBox.DOScaleX(0, 1f).SetEase(Ease.OutSine).SetUpdate(true);
         src = GetComponent<AudioSource>();
     }
 
@@ -25,31 +25,13 @@ public class UIManager : MonoBehaviour
 
     public void loadSceneEasy(string scene)
     {
-        //leftBox.DOScaleX(1, 0.6f).SetEase(Ease.OutSine).SetUpdate(true).onComplete = () =>
-        //{
-        PlayerPrefs.SetString("Difficulty", "Easy");
-        SceneManager.LoadScene(scene);
-        //};
-    }
-    public void loadSceneMedium(string scene)
-    {
-        //leftBox.DOScaleX(1, 0.6f).SetEase(Ease.OutSine).SetUpdate(true).onComplete = () =>
-        //{
-        PlayerPrefs.SetString("Difficulty", "Medium");
-        SceneManager.LoadScene(scene);
-        //};
-    }
-    public void loadSceneHard(string scene)
-    {
-        //leftBox.DOScaleX(1, 0.6f).SetEase(Ease.OutSine).SetUpdate(true).onComplete = () =>
-        //{
-        PlayerPrefs.SetString("Difficulty", "Hard");
-        SceneManager.LoadScene(scene);
-        //};
+        leftBox.DOScaleX(1, 0.6f).SetEase(Ease.OutSine).SetUpdate(true).onComplete = () =>
+        {
+            SceneManager.LoadScene(scene);
+        };
     }
 
     public void loadSceneTitle(){
-        PlayerPrefs.SetString("Difficulty", "None");
         SceneManager.LoadScene("Title");
     }
 

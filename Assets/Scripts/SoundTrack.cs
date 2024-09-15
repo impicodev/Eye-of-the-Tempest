@@ -6,12 +6,11 @@ using UnityEngine;
 public class SoundTrack : MonoBehaviour
 {
     public static SoundTrack track;
-    [System.NonSerialized]
     public AudioSource src;
+    public AudioSource srcB;
 
     void Awake()
     {
-        src = GetComponent<AudioSource>();
         if (track != null)
         {
             Destroy(gameObject);

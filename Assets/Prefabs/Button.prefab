@@ -68,7 +68,7 @@ MonoBehaviour:
   m_text: Button
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2f704244411d0bc4fbe5dbe1d7f9550e, type: 2}
-  m_sharedMaterial: {fileID: -1589074702066831295, guid: 2f704244411d0bc4fbe5dbe1d7f9550e, type: 2}
+  m_sharedMaterial: {fileID: 6041359837928268398, guid: 2f704244411d0bc4fbe5dbe1d7f9550e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -272,8 +272,8 @@ MonoBehaviour:
   clickSound:
     audioSource: {fileID: 0}
     m_audioClipData:
-      m_audioClip: {fileID: 0}
-      m_volume: 0
+      m_audioClip: {fileID: 8300000, guid: 5899e5cc2d9d4514793447184f3e3d05, type: 3}
+      m_volume: 0.5
       m_waitUntil: 0
       m_pitch: 1
       m_pitchVariation: 0
@@ -281,8 +281,8 @@ MonoBehaviour:
   hoverSound:
     audioSource: {fileID: 0}
     m_audioClipData:
-      m_audioClip: {fileID: 0}
-      m_volume: 0
+      m_audioClip: {fileID: 8300000, guid: 724e7328ab48d3748b270eb12c53329e, type: 3}
+      m_volume: 0.5
       m_waitUntil: 0
       m_pitch: 1
       m_pitchVariation: 0

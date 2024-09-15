@@ -55,9 +55,9 @@ public class PlayerController : MonoBehaviour
             spacePressed = Time.time;
 
         Vector2 pos = rb.position;
-        pos.y = collider.bounds.min.y - 0.05f;
+        pos.y = collider.bounds.min.y - 0.02f;
         RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.down);
-        bool grounded = hit.collider != null && !hit.collider.isTrigger && pos.y - hit.point.y < 0.05f;
+        bool grounded = hit.collider != null && !hit.collider.isTrigger && pos.y - hit.point.y < 0.02f;
         if (!wasGrounded && grounded)
             AudioManager.PlayOneShotAudio(landSFX);
         animator.SetBool("Grounded", grounded);
@@ -79,9 +79,10 @@ public class PlayerController : MonoBehaviour
 
         if (lockControls) return;
         if (Time.time - spacePressed <= jumpBuffer && grounded) {
+            if (vel.y <= 0.01)
+                AudioManager.PlayOneShotAudio(jumpSFX);
             spacePressed = -100;
             vel.y = jumpStrength;
-            AudioManager.PlayOneShotAudio(jumpSFX);
         }
         rb.velocity = vel;
 

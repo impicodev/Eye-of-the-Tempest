@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class Storm : MonoBehaviour
 {
@@ -17,23 +18,12 @@ public class Storm : MonoBehaviour
     public List<SpriteRenderer> chunks;
     public List<GameObject> rainChunks;
 
-    void Start()
+    public IEnumerator StartStorm()
     {
-        StartCoroutine(StartStorm()); //Waits stormWaitTime seconds, then starts the storm.
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    IEnumerator StartStorm()
-    {
-        yield return new WaitForSeconds(stormWaitTime);
         storming = true;
         overlay.SetActive(true);
+        SoundTrack.track.src.DOFade(0, 0.5f);
+        SoundTrack.track.srcB.DOFade(0.1f, 0.5f);
         StartCoroutine(StrikeLightning());
         //play some kind of rumble sfx to indicate that the storm is beginning
         //change chunk backgrounds
@@ -44,6 +34,8 @@ public class Storm : MonoBehaviour
         {
             rainChunk.SetActive(true);
         }
+        yield return new WaitForSeconds(stormDuration);
+        EndStorm();
     }
 
     IEnumerator StrikeLightning()
@@ -68,6 +60,8 @@ public class Storm : MonoBehaviour
     }
 
     public void EndStorm(){
+        SoundTrack.track.src.DOFade(0.1f, 0.5f);
+        SoundTrack.track.srcB.DOFade(0f, 0.5f);
         storming = false;
         overlay.SetActive(false);
         //Also like, run DropLightning one more time to kill a waiter. Implement later. Or never I guess :thumbs_up:

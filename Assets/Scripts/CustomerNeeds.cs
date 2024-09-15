@@ -105,7 +105,7 @@ public class CustomerNeeds : MonoBehaviour
         if (playSFX)
         {
             AudioManager.PlayOneShotAudio(satisfiedSFX);
-            GameManager.Game.happiness = Mathf.Min(100, GameManager.Game.happiness + 5);
+            GameManager.Game.happiness = Mathf.Min(100, GameManager.Game.happiness + 1);
         }
         needBubble.SetActive(false);
         if (isCustomer)

@@ -12,14 +12,10 @@ public class GameOver : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        string difficulty = PlayerPrefs.GetString("Difficulty");
-        difText.text = "Difficulty: "+difficulty;
-        hsText.text = "Orders Completed: "+ PlayerPrefs.GetInt(difficulty);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        hsText.text = "Orders Filled: "+ PlayerPrefs.GetInt("Score") + "\n";
+        if (PlayerPrefs.GetInt("Score") == PlayerPrefs.GetInt("Best"))
+            hsText.text += "New Record!";
+        else
+            hsText.text += "Personal Best: " + PlayerPrefs.GetInt("Best");
     }
 }
