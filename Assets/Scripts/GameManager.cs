@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
 
     public float timer;
     private int ordersCompleted = 0;
-    private float happiness = 100;
+    public float happiness = 100;
     private float fuel = 100;
     private CustomerNeeds[] customers;
     private int queuedOrders = 0;

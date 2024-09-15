@@ -70,6 +70,7 @@ public class CustomerNeeds : MonoBehaviour
                 float distance = Vector2.Distance(transform.position, GameManager.Game.player.transform.position);
                 float scale = Mathf.Max(0.55f, 1 - (distance - 13) / 50);
                 indicator.GetComponent<RectTransform>().sizeDelta = Vector2.one * 140 * scale;
+                indicator.transform.localScale = indicator.transform.localScale;
                 indicator.transform.GetChild(2).GetComponent<RectTransform>().sizeDelta = Vector2.one * 80 * scale;
                 indicator.GetComponent<Slider>().value = 1 - timer / patience;
             }
@@ -102,7 +103,10 @@ public class CustomerNeeds : MonoBehaviour
 
     public void BecomeSatisfied(bool playSFX = true){
         if (playSFX)
+        {
             AudioManager.PlayOneShotAudio(satisfiedSFX);
+            GameManager.Game.happiness = Mathf.Min(100, GameManager.Game.happiness + 5);
+        }
         needBubble.SetActive(false);
         if (isCustomer)
             need = "";

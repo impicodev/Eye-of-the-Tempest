@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     public AudioSource metalFootsteps, woodFootsteps;
     [System.NonSerialized]
     public bool lockControls = false;
-    public AudioData jumpSFX;
+    public AudioData jumpSFX, landSFX;
 
     Queue<string> itemNames = new Queue<string>();
     Queue<GameObject> items = new Queue<GameObject>();
@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     float spacePressed = -100;
     Animator animator;
     float lastGive = -10;
+    bool wasGrounded = false;
 
     private void Start()
     {
@@ -57,6 +58,8 @@ public class PlayerController : MonoBehaviour
         pos.y = collider.bounds.min.y - 0.05f;
         RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.down);
         bool grounded = hit.collider != null && !hit.collider.isTrigger && pos.y - hit.point.y < 0.05f;
+        if (!wasGrounded && grounded)
+            AudioManager.PlayOneShotAudio(landSFX);
         animator.SetBool("Grounded", grounded);
         bool onMetal = hit.collider.tag == "Metal";
         if ((onMetal && grounded && running) != metalFootsteps.isPlaying)
@@ -101,6 +104,7 @@ public class PlayerController : MonoBehaviour
             DropItem();
         }
         UpdatePrompt();
+        wasGrounded = grounded;
     }
 
     public bool canCarryMore()
