@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public static AudioSource src;
-    public Image musicToggleImg;
+    // public Image musicToggleImg;
     //public Transform leftBox, rightBox;
 
     void Awake()
@@ -20,7 +20,7 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        musicToggleImg.color = SoundTrack.track.src.isPlaying ? Color.white : Color.gray;
+        // musicToggleImg.color = SoundTrack.track.src.isPlaying ? Color.white : Color.gray;
     }
 
     public void loadScene(string scene)
@@ -38,6 +38,6 @@ public class UIManager : MonoBehaviour
             SoundTrack.track.src.UnPause();
         else
             SoundTrack.track.src.Pause();
-        musicToggleImg.color = isPlaying ? Color.white : Color.gray;
+        // musicToggleImg.color = isPlaying ? Color.white : Color.gray;
     }
 }

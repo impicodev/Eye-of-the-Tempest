@@ -15,6 +15,7 @@ public class Storm : MonoBehaviour
     public Sprite stormBG;
     public Sprite normalBG;
     public List<SpriteRenderer> chunks;
+    public List<GameObject> rainChunks;
 
     void Start()
     {
@@ -38,6 +39,10 @@ public class Storm : MonoBehaviour
         //change chunk backgrounds
         foreach(SpriteRenderer chunk in chunks){
             chunk.sprite = stormBG;
+        }
+        foreach (GameObject rainChunk in rainChunks)
+        {
+            rainChunk.SetActive(true);
         }
     }
 
@@ -70,17 +75,22 @@ public class Storm : MonoBehaviour
         {
             chunk.sprite = normalBG;
         }
+        foreach(GameObject rainChunk in rainChunks)
+        {
+            rainChunk.SetActive(false);
+        }
     }
 
     IEnumerator Lightning(GameObject thisLightning){
         //Replaces the Lightning.cs script (because that was just messy and broken.) 
         //Translates the lightning down, then destroys it after a certain point.
-        thisLightning.transform.Translate(new Vector3(0, -10, 0) * Time.deltaTime);
-        if (thisLightning.transform.position.y <= -11)
-        {
-            DestroyLightning(thisLightning);
+        while(thisLightning != null){
+            if (thisLightning.transform.position.y <= -11)
+            {
+                DestroyLightning(thisLightning);
+            }
+            yield return new WaitForSeconds(0.1f);
         }
-        yield return new WaitForSeconds(0.1f);
     }
 
     public void DestroyLightning(GameObject thisLightning){
