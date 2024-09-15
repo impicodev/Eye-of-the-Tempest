@@ -23,12 +23,34 @@ public class UIManager : MonoBehaviour
         // musicToggleImg.color = SoundTrack.track.src.isPlaying ? Color.white : Color.gray;
     }
 
-    public void loadScene(string scene)
+    public void loadSceneEasy(string scene)
     {
         //leftBox.DOScaleX(1, 0.6f).SetEase(Ease.OutSine).SetUpdate(true).onComplete = () =>
         //{
-            SceneManager.LoadScene(scene);
+        PlayerPrefs.SetString("Difficulty", "Easy");
+        SceneManager.LoadScene(scene);
         //};
+    }
+    public void loadSceneMedium(string scene)
+    {
+        //leftBox.DOScaleX(1, 0.6f).SetEase(Ease.OutSine).SetUpdate(true).onComplete = () =>
+        //{
+        PlayerPrefs.SetString("Difficulty", "Medium");
+        SceneManager.LoadScene(scene);
+        //};
+    }
+    public void loadSceneHard(string scene)
+    {
+        //leftBox.DOScaleX(1, 0.6f).SetEase(Ease.OutSine).SetUpdate(true).onComplete = () =>
+        //{
+        PlayerPrefs.SetString("Difficulty", "Hard");
+        SceneManager.LoadScene(scene);
+        //};
+    }
+
+    public void loadSceneTitle(){
+        PlayerPrefs.SetString("Difficulty", "None");
+        SceneManager.LoadScene("Title");
     }
 
     public void toggleMusic()

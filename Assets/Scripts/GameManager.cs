@@ -205,7 +205,7 @@ public class GameManager : MonoBehaviour
 
     private void gameOver()
     {
-        SceneManager.LoadScene("Title");
+
     }
 
     public Sprite getSprite(string item)
