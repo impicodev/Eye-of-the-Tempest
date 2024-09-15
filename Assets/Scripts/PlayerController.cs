@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     public AudioSource metalFootsteps, woodFootsteps;
     [System.NonSerialized]
     public bool lockControls = false;
+    public AudioData jumpSFX;
 
     Queue<string> itemNames = new Queue<string>();
     Queue<GameObject> items = new Queue<GameObject>();
@@ -77,6 +78,7 @@ public class PlayerController : MonoBehaviour
         if (Time.time - spacePressed <= jumpBuffer && grounded) {
             spacePressed = -100;
             vel.y = jumpStrength;
+            AudioManager.PlayOneShotAudio(jumpSFX);
         }
         rb.velocity = vel;
 

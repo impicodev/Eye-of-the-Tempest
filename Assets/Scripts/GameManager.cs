@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public AnimationCurve difficultyCurve;
     public int[] upgradeMilestones;
     public AudioData purchaseSFX, angrySFX, orderSFX, fuelEmptySFX, fuelFullSFX;
-    public AudioData[] voiceSFX;
+    public AudioData voice1, voice2, voice3, voice4, voice5, voice6, voice7, voice8, voice9;
     public TMP_Text upgradeCounter, orderCounter, tutorialText;
     public GameObject upgradeUI, tutorial, openMouthRobot;
     public float fuelLoss = 1.5f;
@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     private CustomerNeeds[] customers;
     private int queuedOrders = 0;
     int milestoneIdx = 0;
+    bool mouseDown = false;
 
     private void Awake()
     {
@@ -86,12 +87,54 @@ public class GameManager : MonoBehaviour
 
             tutorialText.text = "";
             int cnt = 0;
+            mouseDown = false;
+            float lastSpeech = -100;
             foreach (char chr in message)
             {
                 tutorialText.text += chr;
                 yield return new WaitForSeconds(0.04f);
-                if (!voiceSFX[0].audioSource.isPlaying)
-                    AudioManager.PlayOneShotAudio(voiceSFX[Random.Range(0, voiceSFX.Length)]);
+                if (mouseDown)
+                {
+                    tutorialText.text = message;
+                    break;
+                }
+
+                AudioData clip = voice1;
+                switch (Random.Range(1, 10))
+                {
+                    case (1):
+                        clip = voice1;
+                        break;
+                    case (2):
+                        clip = voice2;
+                        break;
+                    case (3):
+                        clip = voice3;
+                        break;
+                    case (4):
+                        clip = voice4;
+                        break;
+                    case (5):
+                        clip = voice5;
+                        break;
+                    case (6):
+                        clip = voice6;
+                        break;
+                    case (7):
+                        clip = voice7;
+                        break;
+                    case (8):
+                        clip = voice8;
+                        break;
+                    case (9):
+                        clip = voice9;
+                        break;
+                }
+                 if (Time.time - lastSpeech >= 0.6f)
+                {
+                    AudioManager.PlayOneShotAudio(clip, volumeMultiplier:1.5f);
+                    lastSpeech = Time.time;
+                }
                 if (++cnt == 2)
                 {
                     cnt = 0;
@@ -157,6 +200,9 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetMouseButtonDown(0))
+            mouseDown = true;
+
         if (player.lockControls) return;
         if (milestoneIdx > 1)
         {

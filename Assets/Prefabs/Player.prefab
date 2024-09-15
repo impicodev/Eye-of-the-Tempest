@@ -314,6 +314,15 @@ MonoBehaviour:
   sprite: {fileID: 2858772086235744277}
   metalFootsteps: {fileID: 6952980239067269991}
   woodFootsteps: {fileID: 330392210529556895}
+  jumpSFX:
+    audioSource: {fileID: 0}
+    m_audioClipData:
+      m_audioClip: {fileID: 8300000, guid: f21842761742abb4283421b9cfe73051, type: 3}
+      m_volume: 1
+      m_waitUntil: 0
+      m_pitch: 1
+      m_pitchVariation: 0
+      lastStartTime: 0
 --- !u!61 &1648255550711638514
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -430,7 +439,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 9f66e6f8f4873864581d6c1beb1f0ea2, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.25
+  m_Volume: 0.36
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -664,7 +673,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 0c69a3f59cb388c4284dd326877beb17, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.25
+  m_Volume: 0.36
   m_Pitch: 1
   Loop: 1
   Mute: 0
