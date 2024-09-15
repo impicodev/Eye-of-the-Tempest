@@ -54,6 +54,14 @@ public class GameManager : MonoBehaviour
         }));
     }
 
+    private void Start(){
+        if (!PlayerPrefs.HasKey("Easy")){ //If easy isn't set, none of them are tbh. This should just be for first-time PlayerPrefs setup
+            PlayerPrefs.SetInt("Easy", 0);
+            PlayerPrefs.SetInt("Medium", 0);
+            PlayerPrefs.SetInt("Hard", 0);
+        }
+    }
+
     IEnumerator newOrder(float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -251,7 +259,12 @@ public class GameManager : MonoBehaviour
 
     private void gameOver()
     {
-
+        // SceneManager.LoadScene("Title");
+        string difficulty = PlayerPrefs.GetString("Difficulty");
+        if (PlayerPrefs.GetInt(difficulty) < ordersCompleted)
+        {
+            PlayerPrefs.SetInt(difficulty, ordersCompleted);
+        }
     }
 
     public Sprite getSprite(string item)
