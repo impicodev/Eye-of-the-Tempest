@@ -37,7 +37,7 @@ public class ResourceInfo : MonoBehaviour
 
     private void Update()
     {
-        if (timer >= 0)
+        if (timer >= 0 && !GameManager.Game.player.lockControls)
         {
             timer += Time.deltaTime;
             pattyTimer.value = timer / pattyCookTime;
