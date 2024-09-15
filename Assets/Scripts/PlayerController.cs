@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour
     public TMP_Text prompt, promptB;
     public Transform sprite;
     public AudioSource metalFootsteps, woodFootsteps;
+    [System.NonSerialized]
+    public bool lockControls = false;
 
     Queue<string> itemNames = new Queue<string>();
     Queue<GameObject> items = new Queue<GameObject>();
@@ -36,15 +38,18 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (lockControls)
+            rb.velocity = new Vector2(0, rb.velocity.y);
         float horizontal = Input.GetAxis("Horizontal");
+        if (lockControls) horizontal = 0;
         Vector3 vel = rb.velocity;
         vel.x = horizontal * speed;
-        bool running = Input.GetAxisRaw("Horizontal") != 0;
+        bool running = Input.GetAxisRaw("Horizontal") != 0 && !lockControls;
         animator.SetBool("Running", running);
         animator.SetBool("Happy", Time.time - lastGive <= 1.5f);
         sprite.localScale = new Vector3(vel.x < 0 ? -1 : 1, 1, 1);
 
-        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow) && !lockControls)
             spacePressed = Time.time;
 
         Vector2 pos = rb.position;
@@ -68,6 +73,7 @@ public class PlayerController : MonoBehaviour
                 woodFootsteps.UnPause();
         }
 
+        if (lockControls) return;
         if (Time.time - spacePressed <= jumpBuffer && grounded) {
             spacePressed = -100;
             vel.y = jumpStrength;

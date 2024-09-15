@@ -32,7 +32,7 @@ public class CustomerNeeds : MonoBehaviour
 
     void Update()
     {
-        if (!isCustomer) return;
+        if (!isCustomer || GameManager.Game.player.lockControls) return;
         if (need != "")
         {
             timer += Time.deltaTime;
