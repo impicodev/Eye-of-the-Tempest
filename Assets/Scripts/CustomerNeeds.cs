@@ -41,6 +41,8 @@ public class CustomerNeeds : MonoBehaviour
             {
                 Debug.Log("Customer at " + transform.position + " was angered >:(");
                 AudioManager.PlayOneShotAudio(angrySFX);
+                if (indicator != null)
+                    Destroy(indicator);
                 GameManager.Game.customerAngered(happinessLoss);
                 BecomeSatisfied(false);
             }

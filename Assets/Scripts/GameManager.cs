@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public AnimationCurve difficultyCurve;
     public int[] upgradeMilestones;
     public AudioData purchaseSFX, angrySFX, orderSFX, fuelEmptySFX, fuelFullSFX;
+    public AudioData[] voiceSFX;
     public TMP_Text upgradeCounter, orderCounter, tutorialText;
     public GameObject upgradeUI, tutorial, openMouthRobot;
     public float fuelLoss = 1.5f;
@@ -46,9 +47,9 @@ public class GameManager : MonoBehaviour
             "Welcome abord the Loco-Motive!",
             "Use the ARROW keys to move around and SPACE to jump",
             ".4",
-            "The passengers on this train are very needy! Your job is to keep them fed and happy",
+            "The passengers on this train are very needy! It's your job to keep them fed and happy",
             "Water is available at the water dispenser, and the burgers are in the fridge. You might need to cook them first, though...",
-            "Here comes your first customer now. Good luck!"
+            "Customer orders will appear as bubbles above their heads and on the sides of the screen. Here comes your first one now!"
         }));
     }
 
@@ -89,12 +90,15 @@ public class GameManager : MonoBehaviour
             {
                 tutorialText.text += chr;
                 yield return new WaitForSeconds(0.04f);
-                if (++cnt == 3)
+                if (!voiceSFX[0].audioSource.isPlaying)
+                    AudioManager.PlayOneShotAudio(voiceSFX[Random.Range(0, voiceSFX.Length)]);
+                if (++cnt == 2)
                 {
                     cnt = 0;
                     openMouthRobot.SetActive(!openMouthRobot.activeSelf);
                 }
             }
+            openMouthRobot.SetActive(true);
             yield return new WaitUntil(() => Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space));
         }
         player.lockControls = false;
@@ -117,24 +121,11 @@ public class GameManager : MonoBehaviour
 
     public void speedUpgrade()
     {
-        if (milestoneIdx == 2)
-        {
-            StartCoroutine(showTutorial(new string[] {
-                    "Oh no! The conductor has mysteriously disappeared.",
-                    "Grab coal from the back of the train and bring it to the front to replenish fuel.",
-                    "If you run out of fuel the passengers will be very unhappy... so stay vigilant"
-                }));
-            fuelBar.gameObject.SetActive(true);
-        }
-
         player.lockControls = false;
         upgradeUI.SetActive(false);
         AudioManager.PlayOneShotAudio(purchaseSFX);
         player.speed += 3;
-    }
 
-    public void capacityUpgrade()
-    {
         if (milestoneIdx == 2)
         {
             StartCoroutine(showTutorial(new string[] {
@@ -144,11 +135,24 @@ public class GameManager : MonoBehaviour
                 }));
             fuelBar.gameObject.SetActive(true);
         }
+    }
 
+    public void capacityUpgrade()
+    {
         player.lockControls = false;
         upgradeUI.SetActive(false);
         AudioManager.PlayOneShotAudio(purchaseSFX);
         ++player.carryCapacity;
+
+        if (milestoneIdx == 2)
+        {
+            StartCoroutine(showTutorial(new string[] {
+                    "Oh no! The conductor has mysteriously disappeared.",
+                    "Grab coal from the back of the train and bring it to the front to replenish fuel.",
+                    "If you run out of fuel the passengers will be very unhappy... so stay vigilant"
+                }));
+            fuelBar.gameObject.SetActive(true);
+        }
     }
 
     private void Update()
