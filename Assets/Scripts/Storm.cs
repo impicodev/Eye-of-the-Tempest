@@ -59,6 +59,7 @@ public class Storm : MonoBehaviour
         GameObject newLightning = Instantiate(lightning, gameObject.transform);
         newLightning.transform.position = new Vector3(x, newLightning.transform.position.y, 0);
         lightningBolts.Add(newLightning);
+        StartCoroutine(Lightning(newLightning));
     }
 
     public void EndStorm(){
