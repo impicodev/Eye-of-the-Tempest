@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Lightning : MonoBehaviour
 {
-    // Update is called once per frame
-    void Update()
+    public GameObject storm;
+
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        gameObject.transform.Translate(new Vector3(0, -10, 0)*Time.deltaTime);
-        if(gameObject.transform.position.y <= -11){
-            Destroy(gameObject); //I think this hasn't been working but it's ok
+        if(other.tag == "Player"){
+            //Disappear object when player collides. Do nothing else
+            storm.GetComponent<Storm>().DestroyLightning(gameObject);
         }
     }
+
 }
